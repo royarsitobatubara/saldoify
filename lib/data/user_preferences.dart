@@ -14,4 +14,34 @@ class UserPreferences {
     prefs.setString(key, value);
   }
 
+  // GET [BOOL]
+  static Future<bool> getDataBool(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key) ?? false;
+  }
+
+  // SET [BOOL]
+  static Future<void> setDataBool(String key, bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(key, value);
+  }
+
+  // GET [INT]
+  static Future<int?> getDataInt(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(key);
+  }
+
+
+  // SET [INT]
+  static Future<void> setDataInt(String key, int value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(key, value);
+  }
+
+  static Future<void> deleteData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
 }

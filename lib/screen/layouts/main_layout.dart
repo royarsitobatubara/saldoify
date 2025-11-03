@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:saldoify/helpers/app_colors.dart';
-import 'package:saldoify/screen/add_transaction_screen.dart';
 import 'package:saldoify/screen/home_screen.dart';
-import 'package:saldoify/screen/profile_screen.dart';
 import 'package:saldoify/screen/statistic_screen/statistic_layout.dart';
 
 class MainLayout extends StatefulWidget {
@@ -18,9 +17,8 @@ class _MainLayoutState extends State<MainLayout> {
   final List<Map<String, dynamic>> _screen = [
     {'screen': HomeScreen(), 'icon': Icons.home_filled},
     {'screen': const StatisticLayout(), 'icon': Icons.candlestick_chart_sharp},
-    {'screen': const AddTransactionScreen(), 'icon': Icons.add},
-    {'screen': Center(child: Text("development")), 'icon': Icons.device_unknown},
-    {'screen': const ProfileScreen(), 'icon': Icons.person}
+    {'screen': const Center(child: Text("development")), 'icon': Icons.device_unknown},
+    {'screen': const Center(child: Text("development")), 'icon': Icons.wallet}
   ];
 
   @override
@@ -31,30 +29,18 @@ class _MainLayoutState extends State<MainLayout> {
       body: SafeArea(
         child: _screen[_currentIndex]['screen'],
       ),
-      floatingActionButton: _buildCenterButton(context),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: _buildBottomNavigationBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()=>context.push('/add-transaction'),
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add_sharp, size: 26, color: Colors.white,),
+      ),
     );
   }
-
-  Widget _buildCenterButton(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-        setState(() {
-          _currentIndex = 2;
-        });
-      },
-      shape: const CircleBorder(),
-      backgroundColor: AppColors.primary,
-      child: const Icon(Icons.add, size: 26, color: Colors.white,)
-    );
-  }
-
   // Bottom Navigation Bar
   Widget _buildBottomNavigationBar() {
     return BottomAppBar(
       shape: const CircularNotchedRectangle(),
-      notchMargin: 10,
       color: AppColors.primary,
       child: SizedBox(
         height: 0,
@@ -63,8 +49,6 @@ class _MainLayoutState extends State<MainLayout> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(_screen.length, (index) {
-              if (index == 2) return SizedBox(width: 50);
-              index > 2 ? index : index;
               return GestureDetector(
                 onTap: () {
                   setState(() {

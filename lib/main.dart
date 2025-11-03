@@ -3,15 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:saldoify/data/user_provider.dart';
 import 'package:saldoify/routes.dart';
 
-
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_)=>UserProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
-    )
+    ),
   );
 }
 

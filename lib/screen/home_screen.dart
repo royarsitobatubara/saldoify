@@ -1,14 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:saldoify/data/models/transaction_model.dart';
 import 'package:saldoify/data/user_provider.dart';
 import 'package:saldoify/helpers/app_colors.dart';
 import 'package:saldoify/helpers/app_image.dart';
+import 'package:saldoify/widget/info_income_outcome.dart';
 import 'package:saldoify/widget/total_balances.dart';
+import 'package:saldoify/widget/transaction_item.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _search = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<UserProvider>().loadTotalBalance();
+      context.read<UserProvider>().loadAllTransactions();
+    });
+
+    _search.addListener(() {
+      setState(() {}); // rebuild saat teks berubah
+    });
+  }
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,39 +73,111 @@ class HomeScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const TotalBalances()
+                const TotalBalances(),
+                const SizedBox(height: 20,),
+                const InfoIncomeOutcome(),
+                const SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Last Transaction', style: TextStyle(fontWeight: FontWeight.w600),),
+                    GestureDetector(
+                      onTap: ()=>context.push('/transaction'),
+                      child: Row(children: [
+                        const Icon(Icons.keyboard_arrow_down),
+                        const Text('All', style: TextStyle(fontWeight: FontWeight.w500),),
+                      ],),
+                    )
+                  ],
+                ),
+                Expanded(
+                  child: Selector<UserProvider, List<TransactionModel>>(
+                    selector: (_, prov) => prov.allTransactionList,
+                    builder: (_, transaction, __) {
+                      if (transaction.isEmpty) {
+                        return const Center(child: Text('No transaction yet'));
+                      }
+
+                      // Ambil teks pencarian
+                      final searchText = _search.text.toLowerCase();
+
+                      // Filter berdasarkan note atau category
+                      final filteredTransaction = transaction.where((trx) {
+                        final note = trx.note.toLowerCase();
+                        final category = trx.category.toLowerCase();
+                        return note.contains(searchText) || category.contains(searchText);
+                      }).toList();
+
+                      final reversedTransaction = filteredTransaction.reversed.toList();
+
+                      if (reversedTransaction.isEmpty) {
+                        return const Center(child: Text('No transaction found'));
+                      }
+
+                      return ListView.builder(
+                        itemCount: reversedTransaction.length > 8 ? 8 : reversedTransaction.length,
+                        itemBuilder: (context, index) {
+                          final trx = reversedTransaction[index];
+                          return TransactionItem(
+                            type: trx.type.toLowerCase(),
+                            title: trx.note,
+                            date: trx.date,
+                            nominal: trx.nominal,
+                            category: trx.category.toLowerCase(),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                )
+
               ],
             ),
           ),
         )
-
       ],
     );
   }
-  
+
   Widget _buildProfile(BuildContext context){
-    final name = context.read<UserProvider>().name;
     return GestureDetector(
-      onTap: (){},
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      onTap: ()=>context.push('/settings'),
+      child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(50),
             child: Image.asset(
               AppImages.defaultProfile,
-              width: 45,
-              height: 45,
+              width: 50,
+              height: 50,
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(width: 10,),
-          const Text("Hello,", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 15),),
-          Text(name, style:const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("Hello,", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+              Selector<UserProvider, String>(
+                selector: (_, prov) => prov.name,
+                builder: (_, name, __) {
+                  return Text(
+                    name,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                    ),
+                  );
+                },
+              )
+            ],
+          )
         ],
-      )
+      ),
     );
   }
+
 
   Widget _buildSearchBar(BuildContext context){
     return Container(
@@ -106,5 +208,4 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
 }

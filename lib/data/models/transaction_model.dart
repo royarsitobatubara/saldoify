@@ -1,13 +1,15 @@
 class TransactionModel {
-  final int? id;
-  final String category;
-  final int nominal;
-  final String note;
-  final String type;
-  final String date;
+  int? id;
+  int userId;
+  String category;
+  int nominal;
+  String note;
+  String type;
+  String date;
 
   TransactionModel({
     this.id,
+    required this.userId,
     required this.category,
     required this.nominal,
     required this.note,
@@ -15,24 +17,26 @@ class TransactionModel {
     required this.date,
   });
 
-  factory TransactionModel.fromJson(Map<String, dynamic> json) {
-    return TransactionModel(
-      id: json['id'],
-      category: json['category'],
-      nominal: json['nominal'],
-      note: json['note'],
-      type: json['type'],
-      date: json['date'],
-    );
-  }
-
   Map<String, dynamic> toJson() {
-    return {
+    return{
+      'userId': userId,
       'category': category,
       'nominal': nominal,
       'note': note,
       'type': type,
       'date': date,
     };
+  }
+
+  factory TransactionModel.fromJson(Map<String, dynamic> json) {
+    return TransactionModel(
+      id: json['id'],
+      userId: json['userId'],
+      category: json['category'],
+      nominal: json['nominal'],
+      note: json['note'],
+      type: json['type'],
+      date: json['date'],
+    );
   }
 }

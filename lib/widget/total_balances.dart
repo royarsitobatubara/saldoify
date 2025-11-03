@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:saldoify/data/user_provider.dart';
 import 'package:saldoify/helpers/app_colors.dart';
+import 'package:saldoify/helpers/format_number.dart';
 
 class TotalBalances extends StatelessWidget {
   const TotalBalances({super.key});
@@ -7,10 +10,10 @@ class TotalBalances extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
       decoration: BoxDecoration(
           color: AppColors.primary,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [BoxShadow(color: Colors.grey, offset: const Offset(0, 5), blurRadius: 8)]
       ),
       child: Row(
@@ -21,7 +24,12 @@ class TotalBalances extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Total Balance', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
-              const Text('Rp. 100.000', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),)
+              Selector<UserProvider, int>(
+                selector: (_, prov)=> prov.totalBalance,
+                builder: (_, balance, _){
+                  return Text('Rp.${formatRibuan(balance)}', style:const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),);
+                },
+              )
             ],
           ),
           Container(
