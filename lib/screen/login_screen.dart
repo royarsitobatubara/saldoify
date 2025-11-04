@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:saldoify/data/database/user_service.dart';
 import 'package:saldoify/data/user_preferences.dart';
+import 'package:saldoify/data/user_provider.dart';
 import 'package:saldoify/helpers/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -25,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await UserPreferences.setDataBool('isLogin', true);
         if (!mounted) return;
         context.go('/home');
+        context.read<UserProvider>().loadAll();
         return;
       }
       if (!mounted) return;

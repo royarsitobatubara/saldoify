@@ -36,7 +36,7 @@ class IncomeScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final key = dataMap.keys.toList()[index];
                   final value = dataMap[key]!;
-                  return TransactionItem(type: 'income', title: key, date: '', nominal: value, category: key.toLowerCase(), color: index < colors.length ? colors[index] : Colors.grey,);
+                  return TransactionItem(type: 'income', title: key, date: '', nominal: value, category: key.toLowerCase(), color: index < colors.length ? colors[index] : Colors.grey);
                 },
               ),
             ),

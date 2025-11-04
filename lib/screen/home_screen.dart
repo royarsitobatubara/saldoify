@@ -124,6 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             date: trx.date,
                             nominal: trx.nominal,
                             category: trx.category.toLowerCase(),
+                            id: trx.id!,
                           );
                         },
                       );

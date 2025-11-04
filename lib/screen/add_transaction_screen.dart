@@ -6,8 +6,8 @@ import 'package:saldoify/data/database/user_service.dart';
 import 'package:saldoify/data/models/transaction_model.dart';
 import 'package:saldoify/data/user_preferences.dart';
 import 'package:saldoify/data/user_provider.dart';
-import 'package:saldoify/helpers/app_colors.dart';
 import 'package:go_router/go_router.dart';
+import 'package:saldoify/screen/layouts/screen_layout.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({super.key});
@@ -75,7 +75,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         context.read<UserProvider>().loadTotalBalance();
         context.read<UserProvider>().loadAllTransactions();
 
-        context.go('/feedback');
+        context.go('/feedback', extra: 'Transaction added successfully');
       }
     } catch (e) {
       debugPrint('Terjadi kesalahan: $e');
@@ -84,18 +84,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.primary,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: const Icon(Icons.arrow_back_ios_new_outlined, color: Colors.white),
-        ),
-        title: const Text('Add Transaction', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        elevation: 0,
-        backgroundColor: AppColors.primary,
-      ),
-      body: SingleChildScrollView(
+    return ScreenLayout(
+      title: 'Add Transaction',
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Container(
           padding: const EdgeInsets.all(20),

@@ -1,9 +1,12 @@
 import 'package:go_router/go_router.dart';
 import 'package:saldoify/screen/add_transaction_screen.dart';
+import 'package:saldoify/screen/confirm_password_screen.dart';
+import 'package:saldoify/screen/detail_transaction_screen.dart';
+import 'package:saldoify/screen/edit_password_screen.dart';
 import 'package:saldoify/screen/feedback_screen.dart';
 import 'package:saldoify/screen/layouts/main_layout.dart';
 import 'package:saldoify/screen/login_screen.dart';
-import 'package:saldoify/screen/profile_screen.dart';
+import 'package:saldoify/screen/list_account.dart';
 import 'package:saldoify/screen/settings_screen.dart';
 import 'package:saldoify/screen/register_screen.dart';
 import 'package:saldoify/screen/splash_screen.dart';
@@ -42,11 +45,40 @@ final router = GoRouter(
       ),
       GoRoute(
           path: '/feedback',
-          builder: (context, build) => const FeedbackScreen()
+          builder: (context, state){
+                final desc = state.extra.toString();
+                return FeedbackScreen(description: desc,);
+          }
+      ),
+      GoRoute(
+          path: '/list-account',
+          builder: (context, build) => const ListAccount()
+      ),
+      GoRoute(
+          path: '/confirm-account',
+          builder: (context, state) {
+                final data = state.extra as Map<String, dynamic>;
+                final id = data['id'];
+                final name = data['name'];
+                final password = data['password'];
+                return ConfirmPasswordScreen(
+                      id: id,
+                      name: name,
+                      password: password,
+                );
+          },
       ),
           GoRoute(
-              path: '/profile',
-              builder: (context, build) => const ProfileScreen()
-          )
+              path: '/edit-password',
+              builder: (context, build) => const EditPasswordScreen()
+          ),
+      GoRoute(
+          path: '/detail-transaction',
+          builder: (context, state){
+            final id = state.extra as int;
+            return DetailTransactionScreen(id: id);
+          }
+      ),
+
     ]
 );

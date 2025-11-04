@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:saldoify/helpers/format_number.dart';
 
 class TransactionItem extends StatelessWidget {
@@ -8,8 +9,10 @@ class TransactionItem extends StatelessWidget {
   final String? category;
   final num nominal;
   final Color? color;
+  final int? id;
   TransactionItem({
     super.key,
+    this.id,
     required this.type,
     required this.title,
     required this.date,
@@ -66,7 +69,7 @@ class TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){},
+      onTap: ()=>id != null?context.push('/detail-transaction', extra: id):null,
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(10),

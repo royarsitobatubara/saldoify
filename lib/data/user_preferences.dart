@@ -44,4 +44,9 @@ class UserPreferences {
     await prefs.clear();
   }
 
+  static Future<void> deleteIsLogin() async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('isLogin');
+  }
+
 }

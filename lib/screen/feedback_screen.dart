@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:saldoify/helpers/app_colors.dart';
 
 class FeedbackScreen extends StatelessWidget {
-  const FeedbackScreen({super.key});
+  final String description;
+  const FeedbackScreen({super.key, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class FeedbackScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      'Berhasil ditambahkan!',
+                      'SUCCESSFULL!',
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
@@ -44,7 +45,7 @@ class FeedbackScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Data kamu sudah tersimpan dengan aman.',
+                      description,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white.withValues(alpha: .8),

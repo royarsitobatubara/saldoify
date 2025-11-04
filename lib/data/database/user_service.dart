@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:saldoify/data/database/db_helper.dart';
 import 'package:saldoify/data/models/user_model.dart';
+import 'package:saldoify/data/user_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 const String _table = 'users';
@@ -107,6 +108,36 @@ Future<int?> getBalance({required int id}) async {
   } catch (e) {
     debugPrint('Terjadi kesalahan pada getBalance: $e');
     return null;
+  }
+}
+
+Future<void> deleteUser() async {
+  try{
+    final id = await UserPreferences.getDataInt('userId');
+    final db = await DBHelper().database;
+    await db.delete(_table, where: 'id=?', whereArgs: [id]);
+  }catch(e){
+    debugPrint('Terjadi kesalahan pada deleteUser: $e');
+  }
+}
+
+Future<List<UserModel>> getAllUser() async {
+  try{
+    final db = await DBHelper().database;
+    final data = await db.query(_table);
+    return data.map((e)=>UserModel.fromJson(e)).toList();
+  }catch(e){
+    debugPrint('Terjadi kesalahan pada getAllUser: $e');
+    return [];
+  }
+}
+
+Future<void> editPassword({required id, required newPassword}) async {
+  try{
+    final db = await DBHelper().database;
+    await db.update(_table, {'password': newPassword}, where: 'id=?', whereArgs: [id]);
+  }catch(e){
+    debugPrint('Terjadi kesalahan pada editPassword: $e');
   }
 }
 

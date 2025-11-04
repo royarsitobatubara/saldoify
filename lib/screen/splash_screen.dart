@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:saldoify/data/user_preferences.dart';
 import 'package:saldoify/helpers/app_colors.dart';
+import 'package:saldoify/helpers/app_image.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: Center(
-        child: const Text("Logo"),
+        child: Image.asset(AppImages.logo1, width: 100, height: 100,),
       ),
     );
   }

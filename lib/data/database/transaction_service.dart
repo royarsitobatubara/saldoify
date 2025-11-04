@@ -86,3 +86,34 @@ Future<List<TransactionModel>> getTransactionByIdDateCategory({
     return [];
   }
 }
+
+Future<void> deleteTransaction() async {
+  try{
+    final userId = await UserPreferences.getDataInt('userId');
+    final db = await DBHelper().database;
+    await db.delete(_table, where: 'userId = ?', whereArgs: [userId]);
+  }catch(e){
+    debugPrint('Terjadi kesalahan pada deleteTransaction:  $e');
+  }
+}
+
+Future<TransactionModel?> getTransactionById(int id) async {
+  try {
+    final db = await DBHelper().database;
+
+    final result = await db.query(
+      _table,
+      where: 'id = ?',
+      whereArgs: [id] ,
+      limit: 1
+    );
+
+    if (result.isNotEmpty) {
+      return TransactionModel.fromJson(result.first);
+    }
+    return null;
+  } catch (e) {
+    debugPrint('Terjadi kesalahan getTransactionById: $e');
+    return null;
+  }
+}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saldoify/data/database/transaction_service.dart';
 import 'package:saldoify/data/database/user_service.dart';
 import 'package:saldoify/data/models/transaction_model.dart';
+import 'package:saldoify/data/models/user_model.dart';
 import 'package:saldoify/data/user_preferences.dart';
 
 class UserProvider extends ChangeNotifier {
@@ -12,6 +13,7 @@ class UserProvider extends ChangeNotifier {
   String _transactionType = 'Income';
   List<TransactionModel> _transactionList = [];
   List<TransactionModel> _allTransactionList = [];
+  List<UserModel> _userList = [];
 
   String get name => _name;
   int get totalBalance => _totalBalance;
@@ -20,12 +22,26 @@ class UserProvider extends ChangeNotifier {
   String get transactionType => _transactionType;
   List<TransactionModel> get transactionList => _transactionList;
   List<TransactionModel> get allTransactionList => _allTransactionList;
+  List<UserModel> get userList => _userList;
 
   UserProvider() {
     loadName();
     loadTotalBalance();
     loadTransactions();
     loadAllTransactions();
+    getAllUser();
+  }
+
+  Future<void> loadAll() async {
+    try {
+      loadName();
+      loadTotalBalance();
+      loadTransactions();
+      loadAllTransactions();
+      getAllUser();
+    } catch (e) {
+      debugPrint('Failed to load: $e');
+    }
   }
 
   Future<void> loadName() async {
@@ -98,6 +114,18 @@ class UserProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('Error loadAllTransactions: $e');
       _transactionList = [];
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadUser() async {
+    try {
+      final data = await getAllUser();
+      _userList = data;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error loadUser: $e');
+      _userList = [];
       notifyListeners();
     }
   }
