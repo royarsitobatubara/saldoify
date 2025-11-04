@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:saldoify/data/user_provider.dart';
+import 'package:saldoify/helpers/format_number.dart';
 
 class InfoIncomeOutcome extends StatelessWidget {
   const InfoIncomeOutcome({super.key});
@@ -25,7 +28,11 @@ class InfoIncomeOutcome extends StatelessWidget {
                     const Icon(Icons.trending_up, color: Colors.white, size: 25,),
                   ],
                 ),
-                Text('Rp. 100.000', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),)
+                Selector<UserProvider, int>(
+                  selector: (_, prov)=>prov.income,
+                  builder: (_, value, _)=>Text('Rp. ${formatRibuan(value)}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                )
+                
               ],
             ),
           ),
@@ -49,7 +56,10 @@ class InfoIncomeOutcome extends StatelessWidget {
                     const Icon(Icons.trending_down, color: Colors.white, size: 25,),
                   ],
                 ),
-                Text('Rp. 100.000', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),)
+                Selector<UserProvider, int>(
+                  selector: (_, prov)=>prov.outcome,
+                  builder: (_, value, _)=>Text('Rp. ${formatRibuan(value)}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                )
               ],
             ),
           ),

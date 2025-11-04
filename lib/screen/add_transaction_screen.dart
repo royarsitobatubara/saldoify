@@ -71,9 +71,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         }
 
         if (!mounted) return;
-        context.read<UserProvider>().loadTransactions();
-        context.read<UserProvider>().loadTotalBalance();
-        context.read<UserProvider>().loadAllTransactions();
+        context.read<UserProvider>().loadAllTransactionData();
 
         context.go('/feedback', extra: 'Transaction added successfully');
       }

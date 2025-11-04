@@ -23,8 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<UserProvider>().loadTotalBalance();
-      context.read<UserProvider>().loadAllTransactions();
+      context.read<UserProvider>().loadAllTransactionData();
     });
 
     _search.addListener(() {

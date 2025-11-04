@@ -117,3 +117,43 @@ Future<TransactionModel?> getTransactionById(int id) async {
     return null;
   }
 }
+
+Future<int> deleteTransactionById(int id) async {
+  try{
+    final result = await getTransactionById(id);
+    if(result != null){
+      final db = await DBHelper().database;
+      await db.delete(_table, where: 'id=?', whereArgs: [id]);
+      return 1;
+    }
+    return 0;
+  }catch(e){
+    debugPrint('Terjadi kesalahan deleteTransactionById: $e');
+    return 0;
+  }
+}
+
+Future<int> getTypeBalance(String type) async {
+  try {
+    final userId = await UserPreferences.getDataInt('userId');
+    final db = await DBHelper().database;
+
+    final result = await db.query(
+      _table,
+      where: 'userId = ? AND LOWER(type) = ?',
+      whereArgs: [userId, type.toLowerCase()],
+    );
+
+
+    int total = 0;
+
+    for (var row in result) {
+      total += (row['nominal'] ?? 0) as int;
+    }
+
+    return total;
+  } catch (e) {
+    debugPrint('Terjadi kesalahan getTypeBalance: $e');
+    return 0;
+  }
+}

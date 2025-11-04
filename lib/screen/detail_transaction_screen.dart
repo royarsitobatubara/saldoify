@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:saldoify/data/database/transaction_service.dart';
 import 'package:saldoify/data/models/transaction_model.dart';
+import 'package:saldoify/data/user_provider.dart';
 import 'package:saldoify/helpers/app_colors.dart';
 import 'package:saldoify/helpers/format_number.dart';
 import 'package:saldoify/screen/layouts/screen_layout.dart';
@@ -25,6 +28,22 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
       });
     }catch(e){
       debugPrint('Terjadi kesalahan pada _getData: $e');
+    }
+  }
+
+  Future<void> _deleteData() async {
+    try{
+      final data = await deleteTransactionById(widget.id);
+      if(data > 0){
+        if(!mounted) return;
+        context.read<UserProvider>().loadTransactions();
+        context.read<UserProvider>().loadAllTransactionData();
+        context.pop();
+        return;
+      }
+      debugPrint('Gagal menghapus transaksi');
+    }catch(e){
+      debugPrint('Terjadi kesalahan pada _deleteData: $e');
     }
   }
   
@@ -111,22 +130,11 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    onPressed: () {},
-                    child: const Text("Edit"),
-                  ),
-                ),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    onPressed: () {},
-                    child: const Text("Delete"),
+                    onPressed: ()async=> await _deleteData(),
+                    child: const Text("Delete", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
                   ),
                 ),
               ],

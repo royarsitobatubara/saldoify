@@ -8,6 +8,8 @@ import 'package:saldoify/data/user_preferences.dart';
 class UserProvider extends ChangeNotifier {
   String _name = '';
   int _totalBalance = 0;
+  int _income = 0;
+  int _outcome =0;
   int _month = DateTime.now().month;
   int _year = DateTime.now().year;
   String _transactionType = 'Income';
@@ -18,6 +20,8 @@ class UserProvider extends ChangeNotifier {
   String get name => _name;
   int get totalBalance => _totalBalance;
   int get month => _month;
+  int get income => _income;
+  int get outcome => _outcome;
   int get year => _year;
   String get transactionType => _transactionType;
   List<TransactionModel> get transactionList => _transactionList;
@@ -30,6 +34,8 @@ class UserProvider extends ChangeNotifier {
     loadTransactions();
     loadAllTransactions();
     getAllUser();
+    loadIncomeOutcome();
+    loadAllTransactionData();
   }
 
   Future<void> loadAll() async {
@@ -39,8 +45,19 @@ class UserProvider extends ChangeNotifier {
       loadTransactions();
       loadAllTransactions();
       getAllUser();
+      loadIncomeOutcome();
     } catch (e) {
       debugPrint('Failed to load: $e');
+    }
+  }
+  Future<void> loadAllTransactionData() async {
+    try {
+      loadTotalBalance();
+      loadTransactions();
+      loadAllTransactions();
+      loadIncomeOutcome();
+    } catch (e) {
+      debugPrint('Failed to loadAllTransaction: $e');
     }
   }
 
@@ -128,6 +145,18 @@ class UserProvider extends ChangeNotifier {
       _userList = [];
       notifyListeners();
     }
+  }
+
+  Future<void> loadIncomeOutcome() async {
+    try {
+      _income = await getTypeBalance('income');
+      _outcome = await getTypeBalance('outcome');
+    } catch (e) {
+      debugPrint('Error loadIncomeOutcome: $e');
+      _income = 0;
+      _outcome = 0;
+    }
+    notifyListeners();
   }
 
 }
