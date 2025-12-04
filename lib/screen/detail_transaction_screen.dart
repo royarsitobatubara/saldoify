@@ -78,7 +78,7 @@ class _DetailTransactionScreenState extends State<DetailTransactionScreen> {
               child: Icon(
                 _data.type == "income" ? Icons.arrow_downward : Icons.arrow_upward,
                 size: 45,
-                color: _data.type == "income" ? Colors.green : Colors.red,
+                color: _data.type.toLowerCase() == "income" ? Colors.green : Colors.red,
               ),
             ),
 
